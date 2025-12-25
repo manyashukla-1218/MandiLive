@@ -1,0 +1,141 @@
+Create a complete React mandi price tracker app called "MandiLive" with this exact setup:
+
+PROJECT SETUP:
+- React 18 with Vite
+- Install: react-router-dom, recharts, lucide-react
+- Tailwind CSS configured with green/orange theme
+- Dark mode enabled (darkMode: 'class' in tailwind.config)
+
+FOLDER STRUCTURE:
+src/
+  components/
+    Navbar.jsx
+    Footer.jsx
+  pages/
+    Home.jsx
+    Markets.jsx
+    Prices.jsx
+    Compare.jsx
+    Alerts.jsx
+  data/
+    mockData.js
+  App.jsx
+  main.jsx
+
+MOCK DATA (src/data/mockData.js):
+Create arrays for:
+
+1. commodities array (10 items):
+[
+  {
+    id: "wheat",
+    name: "Wheat",
+    nameHindi: "गेहूं",
+    category: "Grains",
+    icon: "🌾",
+    unit: "₹/Quintal",
+    currentPrice: { min: 2000, max: 2200, modal: 2100 },
+    trend: "up",
+    changePercent: 5.2,
+    lastUpdated: "2024-12-26"
+  },
+  // Add 9 more: Rice, Potato, Onion, Tomato, Cotton, Soybean, Sugarcane, Chilli, Turmeric
+  // Use realistic prices and mix of up/down trends
+]
+
+2. mandis array (15 items):
+[
+  {
+    id: "ludhiana",
+    name: "Ludhiana Mandi",
+    district: "Ludhiana",
+    state: "Punjab",
+    commodities: ["wheat", "rice", "cotton"]
+  },
+  // Add 14 more across Punjab(3), Haryana(3), Maharashtra(3), UP(3), MP(3)
+]
+
+3. historicalData object:
+{
+  wheat: [
+    { date: "Nov 26", price: 2000 },
+    { date: "Nov 27", price: 2020 },
+    // ... 30 days of data with gradual increase
+  ],
+  // Add for all commodities
+}
+
+Export: { commodities, mandis, historicalData }
+
+ROUTING (App.jsx):
+Setup React Router with routes:
+- / → Home
+- /markets → Markets
+- /prices/:id → Prices
+- /compare → Compare
+- /alerts → Alerts
+
+NAVBAR (src/components/Navbar.jsx):
+- Sticky top, gradient bg-gradient-to-r from-green-600 to-emerald-700
+- Logo: "🌾 MandiLive" (left, white, bold)
+- Links: Home, Markets, Compare, Alerts (white text, active link bg-white/20)
+- Right side: Dark mode toggle (Sun/Moon icon from lucide-react)
+- Mobile: Hamburger menu with slide-down navigation
+- Use NavLink with activeClassName for active state
+
+FOOTER (src/components/Footer.jsx):
+- bg-gray-800 text-white py-6
+- Copyright "© 2024 MandiLive. All rights reserved."
+- Links: About, Privacy, Contact (text-gray-400 hover:text-white)
+
+DARK MODE:
+- Create ThemeContext in App.jsx with useState for theme
+- Save to localStorage
+- Apply 'dark' class to <html> element when dark mode
+- Provide toggleTheme function via context
+
+HOME PAGE (src/pages/Home.jsx):
+1. Hero Section:
+   - h1: "Live Mandi Prices at Your Fingertips 🌾"
+   - p: "Track real-time agricultural market prices across India"
+   - bg-gradient-to-r from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-900 py-16
+
+2. Featured Commodities Grid:
+   - Map first 6 commodities
+   - Grid: grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6
+   - Each card:
+     * bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6
+     * Large emoji icon (text-6xl)
+     * Name (English + Hindi below in gray)
+     * Modal price (text-3xl font-bold text-green-600)
+     * Trend arrow (TrendingUp/Down from lucide-react, green/red)
+     * Change percent badge
+     * hover:shadow-2xl hover:scale-105 transition-all
+   - Link each card to /prices/:id
+
+3. Quick Stats (3 cards):
+   - Grid below commodities
+   - Card 1: Markets count, Card 2: Commodities count, Card 3: "Last Updated: Today"
+   - bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg p-6
+   - Use icons from lucide-react
+
+MARKETS PAGE (src/pages/Markets.jsx):
+1. Heading: "Agricultural Markets" (text-3xl font-bold mb-8)
+
+2. State Filter:
+   - Select dropdown: "All States", Punjab, Haryana, Maharashtra, UP, MP
+   - On change, filter mandis by state
+   - Styled: border-2 border-green-500 rounded-lg px-4 py-2
+
+3. Mandi Cards Grid (grid-cols-1 md:grid-cols-2 lg:grid-cols-3):
+   - Show filtered mandis
+   - Each card:
+     * bg-white dark:bg-gray-800 shadow-md rounded-lg p-5
+     * MapPin icon (lucide-react) + Mandi name (font-bold)
+     * Location: district, state (text-gray-600)
+     * Badge: "X commodities available"
+     * Button: "View Prices" (bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded)
+     * hover:scale-105 transition
+
+Start with this foundation. Make everything responsive and dark-mode compatible.
+Use Tailwind extensively. Import Lucide icons as needed.

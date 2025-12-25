@@ -1,0 +1,161 @@
+Complete MandiLive app with Alerts page and final improvements:
+
+ALERTS PAGE (src/pages/Alerts.jsx):
+
+State:
+- alerts (useState - load from localStorage on mount)
+- formData (useState): { commodityId, mandiId, targetPrice, condition }
+
+Layout:
+1. Page Heading: "Price Alerts" (text-3xl font-bold mb-8)
+
+2. Create Alert Form (bg-white dark:bg-gray-800 shadow-xl rounded-xl p-6 mb-8):
+   - Section heading: "Create New Alert"
+   
+   - Select Commodity:
+     * Label: "Select Commodity"
+     * Dropdown with all commodities
+     * value={formData.commodityId}
+     * onChange: update formData
+   
+   - Select Market:
+     * Label: "Select Market"
+     * Dropdown with all mandis
+     * value={formData.mandiId}
+   
+   - Target Price:
+     * Label: "Target Price (₹)"
+     * Number input
+     * placeholder="Enter target price"
+     * value={formData.targetPrice}
+   
+   - Condition:
+     * Label: "Alert Condition"
+     * Dropdown: ["Above", "Below"]
+     * value={formData.condition}
+   
+   - Submit Button:
+     * "Add Alert" (bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg w-full)
+     * onClick: handleAddAlert function
+     * Disabled if any field empty
+
+3. handleAddAlert function:
+   - Create alert object: 
+     {
+       id: Date.now(),
+       commodityId,
+       commodityName: find from commodities,
+       mandiId,
+       mandiName: find from mandis,
+       targetPrice,
+       condition,
+       createdAt: new Date().toLocaleString()
+     }
+   - Add to alerts array
+   - Save to localStorage: localStorage.setItem('alerts', JSON.stringify(newAlerts))
+   - Reset form
+   - Show success message (toast or simple div: "✅ Alert created successfully!")
+
+4. Active Alerts Section:
+   - Heading: "Your Active Alerts" (text-2xl font-bold mb-4)
+   
+   - If alerts.length === 0:
+     * Empty state div (text-center py-12)
+     * Emoji: 🔔
+     * "No alerts set yet"
+     * "Create your first price alert above"
+     * text-gray-500
+   
+   - If alerts exist:
+     * Grid of alert cards (grid-cols-1 md:grid-cols-2 gap-4)
+     * Each card:
+       - bg-white dark:bg-gray-800 border-2 border-gray-200 rounded-lg p-5
+       - Commodity icon + name (font-bold)
+       - Mandi name (text-gray-600)
+       - Target info: "Alert when price goes {condition} ₹{targetPrice}"
+       - Created date (text-sm text-gray-500)
+       - Delete button (top-right):
+         * X icon (Lucide Trash2 or X)
+         * text-red-500 hover:text-red-700
+         * onClick: remove from alerts and update localStorage
+
+5. useEffect on mount:
+   - Load alerts from localStorage
+   - Parse JSON and setAlerts
+
+FINAL IMPROVEMENTS:
+
+1. Add Loading States:
+   - Create Skeleton component:
+     * div with animate-pulse bg-gray-200 dark:bg-gray-700
+     * Various sizes (h-4, h-8, h-12, rounded)
+   - Use in Home page: show skeletons, then after 1 second show actual cards
+   - Use setTimeout to simulate loading
+
+2. Smooth Animations:
+   - Add to all pages: fade-in animation
+   - Add to tailwind.config:
+     animation: {
+       'fade-in': 'fadeIn 0.5s ease-in',
+     },
+     keyframes: {
+       fadeIn: {
+         '0%': { opacity: '0', transform: 'translateY(10px)' },
+         '100%': { opacity: '1', transform: 'translateY(0)' },
+       },
+     }
+   - Apply: className="animate-fade-in" to page containers
+
+3. Improve Mobile Experience:
+   - All dropdowns/inputs: text-base (16px minimum for iOS)
+   - Buttons: min-h-[44px] (touch-friendly)
+   - Cards: p-4 on mobile, p-6 on desktop
+   - Charts: horizontal scroll if needed (overflow-x-auto)
+
+4. Error Handling:
+   - Wrap price page content in try-catch
+   - If error: show friendly message with retry button
+   - 404 page for invalid routes:
+     * Create NotFound.jsx: "404 - Page Not Found" with home link
+
+5. Accessibility:
+   - Add aria-labels to buttons
+   - Add alt text where needed
+   - Ensure proper heading hierarchy (h1 → h2 → h3)
+   - Focus states on interactive elements
+
+6. Performance:
+   - Add React.lazy for routes:
+     const Home = lazy(() => import('./pages/Home'))
+     Wrap routes in <Suspense fallback={<Loading />}>
+   - Memoize expensive calculations with useMemo
+
+7. Footer Enhancement:
+   - Add more content:
+     * "Built with ❤️ for Indian Farmers"
+     * GitHub icon link (placeholder)
+     * Email icon for contact
+   - grid-cols-1 md:grid-cols-3 layout
+   - Column 1: About, Column 2: Links, Column 3: Social
+
+8. Search Functionality in Markets:
+   - Add search input above mandi grid
+   - Filter mandis by name on typing
+   - Show "No results" if empty
+
+9. Favorites System:
+   - Add heart icon to commodity cards
+   - onClick: toggle favorite (save to localStorage)
+   - Show filled/outlined heart based on state
+   - Create Favorites page (optional, list favorite commodities)
+
+10. Export Feature in Prices page:
+    - Add "Download Report" button
+    - onClick: create simple text summary
+    - Use window.print() or create downloadable text file
+    - Include: commodity name, prices, trend, date
+
+Make everything polished, smooth, and production-ready.
+Test on mobile viewport (375px width).
+Ensure dark mode works everywhere.
+Add hover effects on all interactive elements.

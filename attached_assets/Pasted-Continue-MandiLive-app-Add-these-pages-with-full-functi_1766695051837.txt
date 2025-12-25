@@ -1,0 +1,105 @@
+Continue MandiLive app. Add these pages with full functionality:
+
+PRICES DETAIL PAGE (src/pages/Prices.jsx):
+
+1. Get commodity ID from useParams
+2. Find commodity from mockData using id
+3. If not found, show "Commodity not found" message
+
+Layout:
+- Container: max-w-6xl mx-auto px-4 py-8
+
+- Header Section:
+  * Large emoji (text-8xl mb-4)
+  * Commodity name (text-4xl font-bold)
+  * Hindi name below (text-2xl text-gray-600)
+  * Category badge (bg-blue-100 text-blue-800 rounded-full px-4 py-2)
+
+- Price Display Card (bg-white dark:bg-gray-800 shadow-xl rounded-2xl p-8):
+  * Grid with 3 columns
+  * Column 1: Min Price (label + value)
+  * Column 2: Modal Price (HIGHLIGHTED, text-4xl text-green-600 font-bold)
+  * Column 3: Max Price
+  * Below: Trend indicator (TrendingUp/Down icon + percentage, large)
+  * Unit display: "per Quintal"
+
+- Historical Price Chart:
+  * Heading: "30-Day Price Trend"
+  * Use Recharts LineChart:
+    - Import: LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
+    - Data: historicalData[commodityId]
+    - Line color: stroke="#10b981" (green)
+    - strokeWidth={3}
+    - XAxis dataKey="date"
+    - YAxis domain={['auto', 'auto']}
+    - CartesianGrid strokeDasharray="3 3"
+    - Tooltip with custom styling
+  * Wrap in ResponsiveContainer width="100%" height={400}
+  * bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6
+
+- Market Analysis Card:
+  * If trend === "up": 
+    - "📈 Prices are trending UP by X%"
+    - "Good time to sell your produce!"
+    - bg-green-50 border-l-4 border-green-500
+  * If trend === "down":
+    - "📉 Prices are trending DOWN by X%"
+    - "Consider waiting for better rates"
+    - bg-red-50 border-l-4 border-red-500
+  * p-6 rounded-lg
+
+- Price Across Markets Table:
+  * Heading: "Prices in Different Markets"
+  * Table showing 5 random mandis
+  * Columns: Mandi Name | Location | Price
+  * Calculate random prices near modal price (±100)
+  * Highlight best price row in bg-green-100
+  * Responsive table (overflow-x-auto on mobile)
+
+COMPARE PAGE (src/pages/Compare.jsx):
+
+State management:
+- selectedCommodity (useState)
+- selectedMandis: array of 3 mandi ids (useState)
+- showComparison (useState - boolean)
+
+Layout:
+1. Heading: "Compare Prices Across Markets"
+
+2. Selection Form (bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6 mb-8):
+   - Label + Select Commodity dropdown:
+     * Map all commodities
+     * styled: w-full border-2 rounded-lg px-4 py-3
+   - Label + Select 3 Mandis (3 separate dropdowns):
+     * Filter mandis that have selected commodity
+     * Same styling as commodity dropdown
+   - Compare Button:
+     * bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg
+     * onClick: setShowComparison(true)
+     * Disabled if commodity or mandis not selected
+
+3. Comparison Result (show if showComparison === true):
+   
+   - Bar Chart (Recharts):
+     * Import: BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer
+     * Data: array of {name: mandiName, price: modalPrice}
+     * ResponsiveContainer width="100%" height={400}
+     * Bar dataKey="price" fill="#10b981"
+     * Label on bars showing exact price
+     * bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6
+   
+   - Comparison Table (below chart):
+     * Table with columns: Market | Min Price | Max Price | Modal Price
+     * 3 rows (for 3 selected mandis)
+     * Generate random prices (modal ± random)
+     * Highlight lowest modal price row: bg-green-50 dark:bg-green-900
+     * Responsive with overflow-x-auto
+
+4. Empty State (if !showComparison):
+   - Center div with emoji 📊
+   - "Select commodity and markets to compare prices"
+   - text-gray-500
+
+Make both pages fully responsive with dark mode support.
+Use proper spacing (space-y-6, gap-6) throughout.
+Add smooth transitions and hover effects.
